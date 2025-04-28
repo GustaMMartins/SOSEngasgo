@@ -66,10 +66,23 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 ## Instalação
-```bash```
-git clone https://github.com/seu-usuario/SOSEngasgo.git
-cd SOSEngasgo
-composer install
-npm install
-rpm run dev ```ou npm run dev build (desenvolvimento x deploy)```
-php artisan serve
+`bash`
+- git clone https://github.com/seu-usuario/SOSEngasgo.git
+- cd SOSEngasgo
+- composer install
+- npm install
+- rpm run dev `ou npm run dev build (desenvolvimento x deploy)`
+- php artisan serve
+
+## Criar branch de trabalho
+- git checkout -b feature/nome-da-funcionalidade
+
+## Fazer modificação e commit
+- git add .
+- git commit -m "Explicar funcionalidade programada"
+
+## Enviar branch para o repositório remoto
+- git push -u origin nome-da-branch
+
+## Sincronizar repositório
+- git pull origin develop `ou main`
