@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TelegramBotController;
 use Illuminate\Support\Facades\Route;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
@@ -19,7 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Telegram Bot Route
-    Route::get('/send-message', function () {
+    Route::get('/send-message_old', function () {
         $chatId = env('CHAT_ID_TELEGRAM', 'erro'); // Get chat ID from .env file
         $message = "Olá mundo! Mensagem via Laravel com id $chatId!"; 
         // ID Bot = 7807867662
@@ -31,12 +32,14 @@ Route::middleware('auth')->group(function () {
     
         return 'Message sent to Telegram!';
     });
-/*
-    Route::get('/get-updates', function () {
-        $updates = Telegram::getUpdates();
-        return $updates; 
-    });
 
+    Route::get('/send-message', [TelegramBotController::class, 'sendMessage'])->name('send-message');
+
+    Route::get('/get-updates', [TelegramBotController::class, 'getUpdates'])->name('get-updates');
+
+    Route::get('/get-me', [TelegramBotController::class, 'getMe'])->name('get-me');
+
+/*
     Route::get('/set-webhook', function () {
         $url = env('TELEGRAM_WEBHOOK_URL');
         $response = Telegram::setWebhook(['url' => $url]);

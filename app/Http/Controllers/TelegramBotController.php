@@ -26,4 +26,13 @@ class TelegramBotController extends Controller
         $updates = Telegram::getUpdates();
         return $updates; 
     }
+
+    //Teste https://telegram-bot-sdk.com/docs/getting-started/initialize/?language=laravel
+    public function getMe()
+    {
+        $response = Telegram::bot('mybot')->getMe();
+        return $response;
+    }
+
+
 }
