@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TelegramBotController;
+use App\Http\Controllers\TelegramController;
 use Illuminate\Support\Facades\Route;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
@@ -19,36 +20,38 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Telegram Bot Route
-    Route::get('/send-message_old', function () {
-        $chatId = env('CHAT_ID_TELEGRAM', 'erro'); // Get chat ID from .env file
-        $message = "Olá mundo! Mensagem via Laravel com id $chatId!"; 
-        // ID Bot = 7807867662
-    
-        Telegram::sendMessage([
-            'chat_id' => $chatId,
-            'text' => $message,
+    //Telegram Bot
+    Route::get('/get-updates', function () {
+        $updates = Telegram::getUpdates();
+        return response()->json($updates);
+    })->name('telegram.get.updates');
+
+    Route::get('/send-message', function () {
+        $response = Telegram::sendMessage([
+            'chat_id' => env('CHAT_ID_TELEGRAM_GROUP'), // ID do chat
+            'text' => 'Olá do Laravel!'
         ]);
-    
-        return 'Message sent to Telegram!';
-    });
+        return response()->json($response);
+    })->name('telegram.send.message');
 
-    Route::get('/send-message', [TelegramBotController::class, 'sendMessage'])->name('send-message');
+    Route::get('get-me', function () {
+        $me = Telegram::getMe();
+        return response()->json($me);
+    })->name('telegram.get.me');
 
-    Route::get('/get-updates', [TelegramBotController::class, 'getUpdates'])->name('get-updates');
 
-    Route::get('/get-me', [TelegramBotController::class, 'getMe'])->name('get-me');
+    // Webhook (Telegram chama automaticamente)
+    Route::post('/telegram/webhook', [TelegramController::class, 'webhook']);
 
-/*
-    Route::get('/set-webhook', function () {
-        $url = env('TELEGRAM_WEBHOOK_URL');
-        $response = Telegram::setWebhook(['url' => $url]);
-        return $response;
-    });
-    Route::get('/delete-webhook', function () {
-        $response = Telegram::deleteWebhook();
-        return $response;
-    });*/
+    // Atendimento
+    Route::get('/atendimento', [TelegramBotController::class, 'index'])->name('telegram.atendimento');
+    Route::post('/iniciar', [TelegramBotController::class, 'iniciarAtendimento'])->name('atendimento.iniciar');
+    Route::get('/aguardando', [TelegramBotController::class, 'aguardandoAtendimento'])->name('telegram.aguardando');
+    Route::get('/verificar-confirmacao', [TelegramBotController::class, 'verificarConfirmacao'])->name('telegram.confirmado');
+    //Route::get('/status', [TelegramBotController::class, 'status'])->name('status');
+
+
+
 });
 
 require __DIR__.'/auth.php';

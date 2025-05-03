@@ -3,35 +3,63 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use Telegram\Bot\Laravel\Facades\Telegram;
+use App\Models\Atendimento;
 
 class TelegramBotController extends Controller
-{
-    public function sendMessage()
-    {
-        $chatId = env('CHAT_ID_TELEGRAM', 'erro'); // Get chat ID from .env file
-        $message = "Olá mundo! Mensagem via Laravel!"; 
-        // ID Bot = 7807867662
 
-        Telegram::sendMessage([
-            'chat_id' => $chatId,
-            'text' => $message,
+{
+
+    public function index()
+    {
+        return view('telegram.atendimento');
+    }
+
+    public function iniciarAtendimento()
+    {
+        $atendimento = Atendimento::create([
+            'status' => 'aguardando',
         ]);
 
-        return 'Message sent to Telegram!';
-    }
-    public function getUpdates()
-    {
-        $updates = Telegram::getUpdates();
-        return $updates; 
+        // Enviar mensagem para o grupo do Telegram
+        Telegram::sendMessage([
+            'chat_id' => env('CHAT_ID_TELEGRAM_GROUP'), // ID do chat,
+            'text' => 'Olá Equipe! Atendimento solicitado com ID: ' . $atendimento->id . ' - envir "ok" ou "recebido" para confirmar. Ass.: Laravel.',
+        ]);
+
+        session(['atendimento_id' =>$atendimento->id]);
+        return redirect()->route('telegram.aguardando');
     }
 
-    //Teste https://telegram-bot-sdk.com/docs/getting-started/initialize/?language=laravel
-    public function getMe()
+    public function aguardandoAtendimento()
     {
-        $response = Telegram::bot('mybot')->getMe();
-        return $response;
+        $id = session('atendimento_id');
+        if (!$id){
+            return redirect()->route('telegram.atendimento');
+        }
+        $atendimento = Atendimento::findOrFail($id);
+
+        // compact envia a variável $atendimento para a view aguardando.blade.php
+        return view('telegram.aguardando', compact('atendimento'));
+    }
+
+    public function status()
+    {
+       //
+    }
+
+    public function VerificarConfirmacao()
+    {
+        $id = session('atendimento_id');
+        if (!$id){
+            return response()->json(['confirmado' => false]);
+        }
+
+        $atendimento = Atendimento::find($id);
+
+        return response()->json([
+            'confirmado' => $atendimento && $atendimento->status === 'confirmado',
+        ]);
     }
 
 
