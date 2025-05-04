@@ -28,7 +28,7 @@ class TelegramBotController extends Controller
             'chat_id' => env('CHAT_ID_TELEGRAM_GROUP'), // ID do chat,
             'text' => 'Olá Equipe! Atendimento solicitado pelo ' .$atendimento->user_id .' com ID: ' . $atendimento->id . ' - responder ao bot com "ok" ou "recebido" para confirmar. Ass.: Laravel.',
         ]);
-        
+
         //message_id do atendimento para que o "ok" possa ser direcionado ao chamado de emergência corretamente
         $atendimento->telegram_message_id = $response->getMessageId(); 
         $atendimento->save();
@@ -50,10 +50,6 @@ class TelegramBotController extends Controller
         return view('telegram.aguardando', compact('atendimento'));
     }
 
-    public function status()
-    {
-       //
-    }
 
     public function VerificarConfirmacao()
     {
@@ -69,5 +65,18 @@ class TelegramBotController extends Controller
         ]);
     }
 
+    public function ConfirmarAtendimento()
+    {
+        $id = session('atendimento_id');
+        if (!$id){
+            return redirect()->route('telegram.atendimento');
+        }
+
+        $atendimento = Atendimento::findOrFail($id);
+        $atendimento->status = 'confirmado';
+        $atendimento->save();
+
+        return view('telegram.confirmado', compact('atendimento'));
+    }
 
 }
