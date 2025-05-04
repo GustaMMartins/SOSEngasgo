@@ -12,11 +12,14 @@
                 <p>Status: {{ $atendimento->status }}</p>
                 <script>
                     setInterval(() => {
-                    fetch('{{ route("status")  }}').then(r => r.json()).then(data => {
+                    fetch('{{ route("telegram.confirmado")  }}').then(r => r.json()).then(data => {
                     if (data.confirmado) {
                     window.location.href = '/confirmado';
                     }
                 }, 3000);
+                    setTimeout(() => {
+                        alert("Nenhuma confirmação recebida. Por favor, tente novamente ou acione o suporte.");
+                }, 60000); // 1 minuto
                 </script>
             </div>
         </div>

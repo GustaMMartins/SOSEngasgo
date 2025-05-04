@@ -45,12 +45,10 @@ Route::middleware('auth')->group(function () {
 
     // Atendimento
     Route::get('/atendimento', [TelegramBotController::class, 'index'])->name('telegram.atendimento');
-    Route::post('/iniciar', [TelegramBotController::class, 'iniciarAtendimento'])->name('atendimento.iniciar');
+    Route::post('/iniciar', [TelegramBotController::class, 'iniciarAtendimento'])->name('atendimento.iniciar'); //clique no botão iniciar atendimento
     Route::get('/aguardando', [TelegramBotController::class, 'aguardandoAtendimento'])->name('telegram.aguardando');
     Route::get('/verificar-confirmacao', [TelegramBotController::class, 'verificarConfirmacao'])->name('telegram.confirmado');
-    //Route::get('/status', [TelegramBotController::class, 'status'])->name('status');
-
-
+    Route::get('/confirmar-atendimento', [TelegramBotController::class, 'confirmarAtendimento'])->name('telegram.confirmar.atendimento');
 
 });
 
