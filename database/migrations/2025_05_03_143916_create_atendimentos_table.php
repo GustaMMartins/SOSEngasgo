@@ -13,8 +13,11 @@ return new class extends Migration
     {
         Schema::create('atendimentos', function (Blueprint $table) {
             $table->id();
-            //$table->userId('user_id')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->enum('status', ['aguardando', 'confirmado'])->default('aguardando');
+            $table->timestamp('dataConfirmado')->nullable();
+            $table->string('localizacao')->nullable();
+            $table->bigInteger('telegram_message_id')->nullable();
             $table->timestamps();
         });
     }

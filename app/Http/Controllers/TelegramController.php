@@ -30,8 +30,10 @@ class TelegramController extends Controller
             if (!$atendimento) {
                 return response('Atendimento não encontrado.', 200);
             }
-            $atendimento->status = 'confirmado';
-            $atendimento->save();
+            $atendimento->update([
+                'status' => 'confirmado',
+                'dataConfirmado' => now(),
+            ]);
 
             $bot->sendMessage([
                     'chat_id' => $message->getChat()->getId(),

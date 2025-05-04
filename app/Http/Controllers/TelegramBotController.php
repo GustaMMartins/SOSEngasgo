@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Telegram\Bot\Laravel\Facades\Telegram;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Atendimento;
 
 class TelegramBotController extends Controller
@@ -19,16 +20,22 @@ class TelegramBotController extends Controller
     {
         $atendimento = Atendimento::create([
             'status' => 'aguardando',
+            'user_id' => Auth::id(), // ID do usuário autenticado
         ]);
 
         // Enviar mensagem para o grupo do Telegram
-        Telegram::sendMessage([
+        $response = Telegram::sendMessage([
             'chat_id' => env('CHAT_ID_TELEGRAM_GROUP'), // ID do chat,
-            'text' => 'Olá Equipe! Atendimento solicitado com ID: ' . $atendimento->id . ' - envir "ok" ou "recebido" para confirmar. Ass.: Laravel.',
+            'text' => 'Olá Equipe! Atendimento solicitado pelo ' .$atendimento->user_id .' com ID: ' . $atendimento->id . ' - responder ao bot com "ok" ou "recebido" para confirmar. Ass.: Laravel.',
         ]);
+        
+        //message_id do atendimento para que o "ok" possa ser direcionado ao chamado de emergência corretamente
+        $atendimento->telegram_message_id = $response->getMessageId(); 
+        $atendimento->save();
 
-        session(['atendimento_id' =>$atendimento->id]);
-        return redirect()->route('telegram.aguardando');
+        session(['atendimento_id'=>$atendimento->id]);
+        //return redirect()->route('telegram.aguardando');
+        return view('telegram.aguardando', compact('atendimento'));
     }
 
     public function aguardandoAtendimento()
