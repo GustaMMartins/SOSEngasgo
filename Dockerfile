@@ -12,16 +12,20 @@ RUN apt-get update && apt-get install -y \
     curl \
     libzip-dev \
     npm \
-    nodejs
+    nodejs \
+    sqlite3 \
+    libsqlite3-dev
 
 # Instalar extensões PHP
-RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip
+RUN docker-php-ext-install pdo pdo_mysql pdo_sqlite mbstring exif pcntl bcmath gd zip
 
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copiar arquivos da aplicação
+# Criar diretório de trabalho
 WORKDIR /var/www
+
+# Copiar arquivos do projeto
 COPY . .
 
 # Instalar dependências do Laravel
@@ -31,8 +35,12 @@ RUN npm install && npm run build
 # Gerar APP_KEY
 RUN php artisan key:generate
 
-# Permissões
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+# Rodar migrations
+RUN php artisan migrate --force
 
-# Rodar servidor embutido
+# Ajustar permissões
+RUN chown -R www-data:www-data storage bootstrap/cache
+
+# Expor a porta e iniciar Laravel
+EXPOSE 8080
 CMD php artisan serve --host=0.0.0.0 --port=8080
