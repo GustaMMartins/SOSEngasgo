@@ -33,7 +33,7 @@ RUN composer install --no-dev --optimize-autoloader
 RUN npm install && npm run build
 
 # Gerar APP_KEY
-RUN php artisan key:generate
+# RUN php artisan key:generate
 
 # Rodar migrations
 RUN php artisan migrate --force
