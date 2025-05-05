@@ -52,15 +52,15 @@ class TelegramBotController extends Controller
 
     public function VerificarConfirmacao()
     {
-        $id = session('message_id');
+        $id = session('atendimento_id');
         if (!$id){
             return response()->json(['confirmado' => false]);
         }
 
-        //$atendimento = Atendimento::find($id);
-        $atendimento = Atendimento::where('telegram_message_id', $id)
+        $atendimento = Atendimento::find($id);
+        /*$atendimento = Atendimento::where('telegram_message_id', $id)
         ->latest()
-        ->first();
+        ->first();*/
 
         return response()->json([
             'confirmado' => $atendimento && $atendimento->status === 'confirmado',

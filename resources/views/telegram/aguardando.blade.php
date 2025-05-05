@@ -11,15 +11,26 @@
                 <p>ID do atendimento: {{ $atendimento->id }}</p>
                 <p>Status: {{ $atendimento->status }}</p>
                 <script>
-                    setInterval(() => {
-                    fetch('{{ route("telegram.confirmado")  }}').then(r => r.json()).then(data => {
-                    if (data.confirmado) {
-                    window.location.href = '/confirmado';
-                    }
-                }, 3000);
+                    // Verifica a confirmação a cada 3 segundos
+                    const interval = setInterval(() => {
+                        fetch('{{ route("telegram.confirmado") }}')
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.confirmado) {
+                                    clearInterval(interval); // Para o intervalo ao receber a confirmação
+                                    window.location.href = '/confirmado';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Erro ao verificar confirmação:', error);
+                            });
+                    }, 3000);
+                
+                    // Exibe alerta após 60 segundos se nenhuma confirmação for recebida
                     setTimeout(() => {
+                        clearInterval(interval); // Para o intervalo após o tempo limite
                         alert("Nenhuma confirmação recebida. Por favor, tente novamente ou acione o suporte.");
-                }, 60000); // 1 minuto
+                    }, 60000);
                 </script>
             </div>
         </div>
