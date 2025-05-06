@@ -34,7 +34,7 @@ class TelegramBotController extends Controller
         $atendimento->save();
 
         //session(['atendimento_id'=>$atendimento->id, 'message_id'=>$atendimento->telegram_message_id]);
-        return view('telegram.aguardando', compact('atendimento'));
+        return view('telegram.verifica', compact('atendimento'));
     }
 /*
     public function aguardandoAtendimento()

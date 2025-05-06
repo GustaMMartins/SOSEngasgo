@@ -6,6 +6,9 @@ use App\Http\Controllers\TelegramController;
 use Illuminate\Support\Facades\Route;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
+// Apagar depois
+use Illuminate\Support\Facades\Artisan;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -48,13 +51,20 @@ Route::middleware('auth')->group(function () {
     //clique no botão iniciar atendimento
     Route::post('/iniciar', [TelegramBotController::class, 'iniciarAtendimento'])->name('atendimento.iniciar'); //sem view
     // Aguardando resposta do webhook
-    Route::get('/aguardando', [TelegramBotController::class, 'VerificarConfirmacao'])->name('telegram.aguardando');
+    Route::get('/aguardando', [TelegramBotController::class, 'VerificarConfirmacao'])->name('telegram.verifica');
     
     // Verifica se o atendimento foi confirmado pelo webhook e atualiza o status
     //Route::get('/verificar-confirmacao', [TelegramBotController::class, 'verificarConfirmacao'])->name('telegram.verifica'); //sem view
     
     // Confirmar atendimento
     Route::get('/confirmar-atendimento', [TelegramBotController::class, 'confirmarAtendimento'])->name('telegram.confirmado');
+
+    // Temporário
+    Route::get('/limpar-cache', function () {
+        Artisan::call('optimize:clear');
+        return 'Cache limpo!';
+    });
+
 
 });
 

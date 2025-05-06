@@ -12,12 +12,13 @@
                 <p>Status: {{ $atendimento->status }}</p>
                 <script>
                     // Verifica a confirmação a cada 3 segundos
+                    const rotaAguardando = @json(route('telegram.verifica');)
                     const interval = setInterval(() => {
-                        fetch('{{ secure_url(route("telegram.aguardando")) }}')
+                        fetch(rotaAguardando)
                             .then(response => response.json())
                             .then(data => {
                                 if (data.confirmado) {
-                                    clearInterval(interval); // Para o intervalo ao receber a confirmação
+                                    clearInterval(interval); // Parar o intervalo ao receber a confirmação
                                     window.location.href = '/confirmado';
                                 }
                             })
