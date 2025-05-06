@@ -12,7 +12,7 @@
                 <p>Status: {{ $atendimento->status }}</p>
                 <script>
                     // Verifica a confirmação a cada 3 segundos
-                    const rotaAguardando = @json(route('telegram.verifica');)
+                    const rotaAguardando = @json(route('telegram.verificar');)
                     const interval = setInterval(() => {
                         fetch(rotaAguardando)
                             .then(response => response.json())
