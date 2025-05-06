@@ -49,16 +49,6 @@ class TelegramController extends Controller
 
         return response('Webhook recebido.', 200);
     }
-}
 
-
-
-
-
-
-
-
-
-
-
+    
 }
