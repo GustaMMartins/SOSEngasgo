@@ -13,7 +13,7 @@
                 <script>
                     // Verifica a confirmação a cada 3 segundos
                     const interval = setInterval(() => {
-                        fetch('{{ secure_url(route("telegram.confirmado")) }}')
+                        fetch('{{ secure_url(route("telegram.aguardando")) }}')
                             .then(response => response.json())
                             .then(data => {
                                 if (data.confirmado) {

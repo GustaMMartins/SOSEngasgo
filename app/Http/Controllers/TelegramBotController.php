@@ -22,7 +22,7 @@ class TelegramBotController extends Controller
             'status' => 'aguardando',
             'user_id' => Auth::id(), // ID do usuário autenticado
         ]);
-
+        
         // Enviar mensagem para o grupo do Telegram
         $response = Telegram::sendMessage([
             'chat_id' => env('CHAT_ID_TELEGRAM_GROUP'), // ID do chat,
@@ -33,13 +33,14 @@ class TelegramBotController extends Controller
         $atendimento->telegram_message_id = $response->getMessageId(); 
         $atendimento->save();
 
-        session(['atendimento_id'=>$atendimento->id, 'message_id'=>$atendimento->telegram_message_id]);
+        //session(['atendimento_id'=>$atendimento->id, 'message_id'=>$atendimento->telegram_message_id]);
         return view('telegram.aguardando', compact('atendimento'));
     }
-
+/*
     public function aguardandoAtendimento()
     {
         $id = session('atendimento_id');
+        echo "atendimento_id: " .$id;
         if (!$id){
             return redirect()->route('telegram.atendimento');
         }
@@ -48,19 +49,22 @@ class TelegramBotController extends Controller
         // compact envia a variável $atendimento para a view aguardando.blade.php
         return view('telegram.aguardando', compact('atendimento'));
     }
-
+*/
 
     public function VerificarConfirmacao()
     {
         $id = session('atendimento_id');
+        $message_id = session('message_id');
+        echo "message_id: " .$message_id;
+        echo "e atendimento_id: " .$id;
         if (!$id){
             return response()->json(['confirmado' => false]);
         }
 
-        $atendimento = Atendimento::find($id);
-        /*$atendimento = Atendimento::where('telegram_message_id', $id)
+        //$atendimento = Atendimento::find($id);
+        $atendimento = Atendimento::where('telegram_message_id', $message_id && 'id', $id)
         ->latest()
-        ->first();*/
+        ->first();
 
         return response()->json([
             'confirmado' => $atendimento && $atendimento->status === 'confirmado',

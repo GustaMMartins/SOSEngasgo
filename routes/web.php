@@ -41,16 +41,18 @@ Route::middleware('auth')->group(function () {
 
 
     // Webhook (Telegram chama automaticamente)
-    Route::post('/telegram/webhook', [TelegramController::class, 'webhook']);
+    Route::post('/telegram/webhook', [TelegramController::class, 'webhook']); //sem view
 
     // Atendimento
     Route::get('/atendimento', [TelegramBotController::class, 'index'])->name('telegram.atendimento');
     //clique no botão iniciar atendimento
-    Route::post('/iniciar', [TelegramBotController::class, 'iniciarAtendimento'])->name('atendimento.iniciar');
+    Route::post('/iniciar', [TelegramBotController::class, 'iniciarAtendimento'])->name('atendimento.iniciar'); //sem view
     // Aguardando resposta do webhook
-    Route::get('/aguardando', [TelegramBotController::class, 'aguardandoAtendimento'])->name('telegram.aguardando');
+    Route::get('/aguardando', [TelegramBotController::class, 'VerificarConfirmacao'])->name('telegram.aguardando');
+    
     // Verifica se o atendimento foi confirmado pelo webhook e atualiza o status
-    Route::get('/verificar-confirmacao', [TelegramBotController::class, 'verificarConfirmacao'])->name('telegram.confirmado');
+    //Route::get('/verificar-confirmacao', [TelegramBotController::class, 'verificarConfirmacao'])->name('telegram.verifica'); //sem view
+    
     // Confirmar atendimento
     Route::get('/confirmar-atendimento', [TelegramBotController::class, 'confirmarAtendimento'])->name('telegram.confirmado');
 
