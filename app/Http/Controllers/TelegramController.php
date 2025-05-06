@@ -39,6 +39,7 @@ class TelegramController extends Controller
                     'dataConfirmado' => now(),
                 ]);
 
+
                 // Mensagem de feedback no grupo
                 $bot->sendMessage([
                     'chat_id' => $message->getChat()->getId(),
@@ -50,5 +51,5 @@ class TelegramController extends Controller
         return response('Webhook recebido.', 200);
     }
 
-    
+
 }

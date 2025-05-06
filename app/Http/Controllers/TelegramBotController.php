@@ -33,7 +33,7 @@ class TelegramBotController extends Controller
         $atendimento->telegram_message_id = $response->getMessageId(); 
         $atendimento->save();
 
-        //session(['atendimento_id'=>$atendimento->id, 'message_id'=>$atendimento->telegram_message_id]);
+        session(['atendimento_id'=>$atendimento->id, 'message_id'=>$atendimento->telegram_message_id]);
         return view('telegram.verifica', compact('atendimento'));
     }
 /*
