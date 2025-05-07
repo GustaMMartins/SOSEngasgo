@@ -13,9 +13,8 @@
                 @csrf
                 <script>
                     // Verifica a confirmação a cada 3 segundos
-                    const rotaAguardando = @json(route('telegram.verificar');)
                     const interval = setInterval(() => {
-                        fetch(rotaAguardando, {
+                        fetch({{ redirect()->route('telegram.verificar') }}, {
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                             }

@@ -53,3 +53,5 @@ class TelegramController extends Controller
 
 
 }
+
+require __DIR__.'/vendor/autoload.php';

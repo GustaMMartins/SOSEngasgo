@@ -34,13 +34,12 @@ class TelegramBotController extends Controller
         $atendimento->save();
 
         session(['atendimento_id'=>$atendimento->id, 'message_id'=>$atendimento->telegram_message_id]);
-        return view('telegram.aguardando', compact('atendimento'));
+        return redirect()->route('telegram.aguardando', compact('atendimento'));
     }
 
     public function aguardandoAtendimento()
     {
         $id = session('atendimento_id');
-        echo "atendimento_id: " .$id;
         if (!$id){
             return redirect()->route('telegram.atendimento');
         }
