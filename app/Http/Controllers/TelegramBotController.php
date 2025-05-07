@@ -36,7 +36,7 @@ class TelegramBotController extends Controller
         session(['atendimento_id'=>$atendimento->id, 'message_id'=>$atendimento->telegram_message_id]);
         return view('telegram.aguardando', compact('atendimento'));
     }
-/*
+
     public function aguardandoAtendimento()
     {
         $id = session('atendimento_id');
@@ -49,7 +49,6 @@ class TelegramBotController extends Controller
         // compact envia a variável $atendimento para a view aguardando.blade.php
         return view('telegram.aguardando', compact('atendimento'));
     }
-*/
 
     public function VerificarConfirmacao()
     {
