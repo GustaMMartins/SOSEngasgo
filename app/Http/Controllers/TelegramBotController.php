@@ -49,7 +49,7 @@ class TelegramBotController extends Controller
         return view('telegram.aguardando', compact('atendimento'));
     }
 
-    public function VerificarConfirmacao()
+    public function VerificarConfirmacao(Atendimento $atendimento)
     {
         $id = session('atendimento_id');
         $message_id = session('message_id');
@@ -57,14 +57,14 @@ class TelegramBotController extends Controller
         echo "e atendimento_id: " .$id;
         echo "<br>";
         echo "<hr>";
-        if (!$id){
+        if (!$atendimento->id){
             return response()->json(['confirmado' => false]);
         }
 
         //$atendimento = Atendimento::find($id);
-        $atendimento = Atendimento::where('telegram_message_id', $message_id && 'id', $id)
-        ->latest()
-        ->first();
+        //$atendimento = Atendimento::where('telegram_message_id', $message_id && 'id', $id)
+        //->latest()
+        //->first();
 
         return response()->json([
             //'confirmado' => $atendimento && $atendimento->status === 'confirmado',

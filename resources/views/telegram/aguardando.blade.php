@@ -12,28 +12,37 @@
                 <p>Status: {{ $atendimento->status }}</p>
                 @csrf
                 <script>
+                    // Obtém o token CSRF do meta tag gerado pelo Laravel
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
                     // Verifica a confirmação a cada 3 segundos
                     const interval = setInterval(() => {
-                        fetch({{ route('telegram.verificar') }}, {
+                        fetch('{{ route('telegram.verificar', '$atendimento') }}', {
+                            method: 'POST',
                             headers: {
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken // Adiciona o token CSRF no cabeçalho
+                            },
+                            body: JSON.stringify({
+                                id: '{{ $atendimento->id }}' // Envia o ID do atendimento
+                            })
+                        }
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Erro na requisição');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.confirmado) {
+                                clearInterval(interval); // Parar o intervalo ao receber a confirmação
+                                window.location.href = '/confirmacao'; // Redireciona para a página de confirmação
                             }
                         })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Erro na requisição');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                if (data.confirmado) {
-                                    clearInterval(interval); // Parar o intervalo ao receber a confirmação
-                                    window.location.href = '/confirmacao'; // Redireciona para a página de confirmação
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Erro ao verificar confirmação:', error);
-                            });
+                        .catch(error => {
+                            console.error('Erro ao verificar confirmação:',
+                            error);
+                        });
                     }, 3000);
                 
                     // Exibe alerta após 60 segundos se nenhuma confirmação for recebida
