@@ -10,16 +10,26 @@
                 <h2>Aguardando confirmação da equipe...</h2>
                 <p>ID do atendimento: {{ $atendimento->id }}</p>
                 <p>Status: {{ $atendimento->status }}</p>
+                <meta name="csrf-token" content="{{ csrf_token() }}">
                 <script>
                     // Verifica a confirmação a cada 3 segundos
                     const rotaAguardando = @json(route('telegram.verificar');)
                     const interval = setInterval(() => {
-                        fetch(rotaAguardando)
-                            .then(response => response.json())
+                        fetch(rotaAguardando, {
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            }
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Erro na requisição');
+                                }
+                                return response.json();
+                            })
                             .then(data => {
                                 if (data.confirmado) {
                                     clearInterval(interval); // Parar o intervalo ao receber a confirmação
-                                    window.location.href = '/confirmacao'; // Redireciona para a página de confirmação
+                                    window.location.href = '{{ telegram.confirmado }}'; // Redireciona para a página de confirmação
                                 }
                             })
                             .catch(error => {
