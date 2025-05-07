@@ -44,8 +44,9 @@ Route::middleware('auth')->group(function () {
 
     // Atendimento
     Route::get('/atendimento', [TelegramBotController::class, 'index'])->name('telegram.atendimento');
-    Route::post('/atendimento', [TelegramBotController::class, 'iniciarAtendimento'])->name('telegram.atendimento.iniciar'); // clique no botão "iniciar atendimento"
-    
+
+    // Iniciar atendimento
+    Route::post('/aguardando', [TelegramBotController::class, 'iniciarAtendimento'])->name('telegram.atendimento.iniciar'); // clique no botão "iniciar atendimento"
     // Aguardando resposta do webhook
     Route::get('/aguardando', [TelegramBotController::class, 'VerificarConfirmacao'])->name('telegram.verificar');
     

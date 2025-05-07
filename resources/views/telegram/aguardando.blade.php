@@ -19,7 +19,7 @@
                             .then(data => {
                                 if (data.confirmado) {
                                     clearInterval(interval); // Parar o intervalo ao receber a confirmação
-                                    window.location.href = '/confirmado';
+                                    window.location.href = '/confirmacao'; // Redireciona para a página de confirmação
                                 }
                             })
                             .catch(error => {

@@ -69,7 +69,8 @@ class TelegramBotController extends Controller
         ->first();
 
         return response()->json([
-            'confirmado' => $atendimento && $atendimento->status === 'confirmado',
+            //'confirmado' => $atendimento && $atendimento->status === 'confirmado',
+            'confirmado' => $atendimento->status === 'confirmado',
         ]);
     }
 
