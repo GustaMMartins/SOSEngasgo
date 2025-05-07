@@ -10,14 +10,13 @@
                 <h2>Aguardando confirmação da equipe...</h2>
                 <p>ID do atendimento: {{ $atendimento->id }}</p>
                 <p>Status: {{ $atendimento->status }}</p>
-                @csrf
                 <script>
                     // Obtém o token CSRF do meta tag gerado pelo Laravel
                     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
                     // Verifica a confirmação a cada 3 segundos
                     const interval = setInterval(() => {
-                        fetch('{{ route('telegram.verificar', '$atendimento') }}', {
+                        fetch('{{ route('telegram.verificar', $atendimento->id) }}', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -26,7 +25,7 @@
                             body: JSON.stringify({
                                 id: '{{ $atendimento->id }}' // Envia o ID do atendimento
                             })
-                        }
+                        })
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error('Erro na requisição');
