@@ -14,7 +14,7 @@
                 <script>
                     // Verifica a confirmação a cada 3 segundos
                     const interval = setInterval(() => {
-                        fetch({{ redirect()->route('telegram.verificar') }}, {
+                        fetch({{ route('telegram.verificar') }}, {
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                             }
