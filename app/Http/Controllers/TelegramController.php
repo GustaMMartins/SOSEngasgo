@@ -24,7 +24,7 @@ class TelegramController extends Controller
             
             if(str_contains($texto, 'recebido') || str_contains($texto, 'ok')) {
             
-                $$atendimento = Atendimento::where('telegram_message_id', $repliedMessageId)->first();
+                $atendimento = Atendimento::where('telegram_message_id', $repliedMessageId)->first();
 
                 if (!$atendimento) {
                     return response('Atendimento não encontrado para esta resposta.', 200);
