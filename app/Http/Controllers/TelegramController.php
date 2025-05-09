@@ -16,11 +16,12 @@ class TelegramController extends Controller
         
         $message = $update->getMessage();
 
+        $replyToId = $message->getReplyToMessage()?->getMessageId();
         $bot->sendMessage([
-            'chat_id' => $message->getChat()->getId(),
-            'text' => "Atendimento em processamento!",
+        'chat_id' => $message->getChat()->getId(),
+        'text' => "Recebido! Texto: {$message->getText()}\nReplyTo ID: {$replyToId}",
         ]);
-        
+
         // Ou retornar como resposta JSON
         //return response()->json($update->toArray());
 
