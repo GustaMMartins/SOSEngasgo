@@ -11,18 +11,16 @@ class TelegramController extends Controller
 {
     public function webhook(Request $request)
     {
-        Log::info('Webhook recebido com sucesso!');
-
         $bot = new Api(env('TELEGRAM_BOT_TOKEN'));
         $update = $bot->getWebhookUpdate();
-
-        $message = $update->getMessage();
         
-        // registrar no log
-        //Log::info('Conteúdo do webhook recebido:', $update->toArray());
-        Log::channel('telegram')->info('Conteúdo do webhook recebido:', $update->toArray());
+        $message = $update->getMessage();
 
-
+        $bot->sendMessage([
+            'chat_id' => $message->getChat()->getId(),
+            'text' => "Atendimento em processamento!",
+        ]);
+        
         // Ou retornar como resposta JSON
         //return response()->json($update->toArray());
 
@@ -50,7 +48,6 @@ class TelegramController extends Controller
                     'status' => 'confirmado',
                     'dataConfirmado' => now(),
                 ]);
-
 
                 // Mensagem de feedback no grupo
                 $bot->sendMessage([
