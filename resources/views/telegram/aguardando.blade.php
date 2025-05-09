@@ -17,22 +17,25 @@
                     // Verifica a confirmação a cada 3 segundos
                     const interval = setInterval(() => {
                         fetch('{{ route('telegram.verificar', $atendimento->id) }}', {
-                            method: 'POST',
+                            method: 'GET',
                             headers: {
                                 'Content-Type': 'application/json',
                                 'X-CSRF-TOKEN': csrfToken // Adiciona o token CSRF no cabeçalho
                             },
-                            body: JSON.stringify({
-                                id: '{{ $atendimento->id }}' // Envia o ID do atendimento
-                            })
+                            //body: JSON.stringify({
+                            //    id: '{{ $atendimento->id }}' // Envia o ID do atendimento
+                            //})
                         })
                         .then(response => {
                             if (!response.ok) {
+                                console.log('Erro na requisição:', response);
                                 throw new Error('Erro na requisição');
                             }
                             return response.json();
                         })
                         .then(data => {
+                            //Verifica se a resposta contém "confirmado"
+                            console.log('Dados recebidos:', data);
                             if (data.confirmado) {
                                 clearInterval(interval); // Parar o intervalo ao receber a confirmação
                                 window.location.href = '/confirmacao'; // Redireciona para a página de confirmação
