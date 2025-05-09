@@ -5,15 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\Atendimento;
 use Illuminate\Http\Request;
 use Telegram\Bot\Api;
+use Illuminate\Support\Facades\Log;
 
 class TelegramController extends Controller
 {
     public function webhook(Request $request)
     {
+
         $bot = new Api(env('TELEGRAM_BOT_TOKEN'));
         $update = $bot->getWebhookUpdate();
 
         $message = $update->getMessage();
+        
+        // Exibir o conteúdo de $update
+        dd($update);
+
+        // Ou registrar no log
+        Log::info('Conteúdo do webhook recebido:', $update->toArray());
+
+        // Ou retornar como resposta JSON
+        return response()->json($update->toArray());
+
         if (!$message || !$message->getText()) {
             return response('Nenhuma menssagem enviada.', 200);
         }
