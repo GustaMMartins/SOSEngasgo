@@ -5,6 +5,7 @@ use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\TelegramController;
 use Illuminate\Support\Facades\Route;
 use Telegram\Bot\Laravel\Facades\Telegram;
+use Illuminate\Support\Facades\File;
 
 // Apagar depois
 use Illuminate\Support\Facades\Artisan;
@@ -63,6 +64,13 @@ Route::middleware('auth')->group(function () {
         return 'Cache limpo!';
     });
 
+    $logPath = storage_path('logs/telegram.log');
+
+    if (!File::exists($logPath)) {
+        return response('Arquivo de log não encontrado.', 404);
+    }
+
+    return response('<pre>' . e(File::get($logPath)) . '</pre>');
 
 });
 

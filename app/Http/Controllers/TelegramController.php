@@ -11,23 +11,23 @@ class TelegramController extends Controller
 {
     public function webhook(Request $request)
     {
+        Log::info('Webhook recebido com sucesso!');
 
         $bot = new Api(env('TELEGRAM_BOT_TOKEN'));
         $update = $bot->getWebhookUpdate();
 
         $message = $update->getMessage();
         
-        // Exibir o conteúdo de $update
-        dd($update);
+        // registrar no log
+        //Log::info('Conteúdo do webhook recebido:', $update->toArray());
+        Log::channel('telegram')->info('Conteúdo do webhook recebido:', $update->toArray());
 
-        // Ou registrar no log
-        Log::info('Conteúdo do webhook recebido:', $update->toArray());
 
         // Ou retornar como resposta JSON
-        return response()->json($update->toArray());
+        //return response()->json($update->toArray());
 
         if (!$message || !$message->getText()) {
-            return response('Nenhuma menssagem enviada.', 200);
+            return response('Nenhuma mensagem enviada.', 200);
         }
 
         if ($message->getReplyToMessage()) {
@@ -65,5 +65,3 @@ class TelegramController extends Controller
 
 
 }
-
-require __DIR__.'/vendor/autoload.php';
