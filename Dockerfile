@@ -2,6 +2,7 @@ FROM php:8.2-fpm
 
 # Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
+    nginx \
     build-essential \
     libpng-dev \
     libonig-dev \
@@ -37,8 +38,8 @@ RUN npm install && npm run build
 # RUN php artisan key:generate
 
 # Gerar cache de configuração e rodar migrations
-# RUN php artisan config:cache
-# RUN php artisan migrate --force
+RUN php artisan config:cache
+RUN php artisan migrate --force || true
 
 # Copia config do Nginx
 COPY default.conf /etc/nginx/conf.d/default.conf
@@ -46,12 +47,11 @@ COPY default.conf /etc/nginx/conf.d/default.conf
 # Define permissões corretas
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Exponha a porta 80 (Nginx usará)
+# Copia supervisord para gerenciar Nginx + PHP-FPM
+COPY supervisord.conf /etc/supervisord.conf
+
+# Expõe porta
 EXPOSE 80
 
-# Comando de entrada
-CMD sleep 5 && \
-    php artisan config:cache && \
-    php artisan migrate --force && \
-    php-fpm -D && \
-    nginx -g "daemon off;"
+# Inicia supervisord para gerenciar ambos
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
