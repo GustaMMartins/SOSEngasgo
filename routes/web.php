@@ -49,13 +49,13 @@ Route::middleware('auth')->group(function () {
     // Tela aguardando
     Route::get('/aguardando', [TelegramBotController::class, 'aguardandoAtendimento'])->name('telegram.aguardando');
     // Verifica se o atendimento foi confirmado pelo webhook e atualiza o status
-    Route::get('/verificar/{id}', [TelegramBotController::class, 'verificarConfirmacao'])->name('telegram.verificar');
+    Route::get('verificar/{id}', [TelegramBotController::class, 'verificarConfirmacao'])->name('telegram.verificar');
     
     // Confirmar atendimento
     Route::get('/confirmacao', [TelegramBotController::class, 'confirmarAtendimento'])->name('telegram.confirmado');
 
     // Webhook (Telegram chama automaticamente)
-    //Route::post('telegram/webhook', [TelegramController::class, 'webhook']);
+    Route::post('telegram/webhook', [TelegramController::class, 'webhook']);
 
     // Temporário
     Route::get('/limpar-cache', function () {
