@@ -30,17 +30,23 @@ COPY . .
 
 # Instalar dependências do Laravel
 RUN composer install --no-dev --optimize-autoloader
-RUN npm install && npm run build
 
-# Gerar APP_KEY
-# RUN php artisan key:generate
+# Compilar assets (se tiver)
+RUN [ -f package.json ] && npm install && npm run build || echo "No frontend assets to build"
 
-# Rodar migrations
-RUN php artisan migrate --force
-
-# Ajustar permissões
+# Define permissões corretas
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Expor a porta e iniciar Laravel
+# Gera cache (de forma segura) e realiza migrations
+# Se não tiver APP_KEY, key:generate falha silenciosamente
+RUN php artisan config:clear \
+ && php artisan route:clear \
+ && php artisan view:clear \
+ && php artisan key:generate || true \
+ && php artisan migrate --force || true
+
+# Expõe porta
 EXPOSE 10000
+
+# Start do Laravel
 CMD php artisan serve --host=0.0.0.0 --port=10000
