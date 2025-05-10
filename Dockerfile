@@ -40,18 +40,18 @@ RUN npm install && npm run build
 # RUN php artisan config:cache
 # RUN php artisan migrate --force
 
-# Ajustar permissões
+# Copia config do Nginx
+COPY default.conf /etc/nginx/conf.d/default.conf
+
+# Define permissões corretas
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Copia configuração do Nginx
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# Copia script de inicialização
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
-
-# Expõe porta 80 (Render exige)
+# Exponha a porta 80 (Nginx usará)
 EXPOSE 80
 
 # Comando de entrada
-CMD ["/start.sh"]
+CMD sleep 5 && \
+    php artisan config:cache && \
+    php artisan migrate --force && \
+    php-fpm -D && \
+    nginx -g "daemon off;"
