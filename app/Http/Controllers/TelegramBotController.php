@@ -22,7 +22,7 @@ class TelegramBotController extends Controller
             'status' => 'aguardando',
             'user_id' => Auth::id(), // ID do usuário autenticado
         ]);
-
+        
         // Enviar mensagem para o grupo do Telegram
         $response = Telegram::sendMessage([
             'chat_id' => env('CHAT_ID_TELEGRAM_GROUP'), // ID do chat,
@@ -33,9 +33,8 @@ class TelegramBotController extends Controller
         $atendimento->telegram_message_id = $response->getMessageId(); 
         $atendimento->save();
 
-        session(['atendimento_id'=>$atendimento->id]);
-        //return redirect()->route('telegram.aguardando');
-        return view('telegram.aguardando', compact('atendimento'));
+        session(['atendimento_id'=>$atendimento->id, 'message_id'=>$atendimento->telegram_message_id]);
+        return redirect()->route('telegram.aguardando', compact('atendimento'));
     }
 
     public function aguardandoAtendimento()
@@ -50,22 +49,29 @@ class TelegramBotController extends Controller
         return view('telegram.aguardando', compact('atendimento'));
     }
 
-
-    public function VerificarConfirmacao()
+    public function verificarConfirmacao(String $id)
     {
-        $id = session('atendimento_id');
+        //$id = session('atendimento_id');
+        $message_id = session('message_id');
+
+
         if (!$id){
             return response()->json(['confirmado' => false]);
         }
 
         $atendimento = Atendimento::find($id);
+        //$atendimento = Atendimento::where('telegram_message_id', $message_id && 'id', $id)
+        //->latest()
+        //->first();
 
         return response()->json([
             'confirmado' => $atendimento && $atendimento->status === 'confirmado',
+            //'confirmado' => $atendimento->status === 'confirmado',
+            'message_id' => $atendimento->telegram_message_id,
         ]);
     }
 
-    public function ConfirmarAtendimento()
+    public function confirmarAtendimento()
     {
         $id = session('atendimento_id');
         if (!$id){

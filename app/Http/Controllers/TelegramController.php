@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Atendimento;
 use Illuminate\Http\Request;
 use Telegram\Bot\Api;
+use Illuminate\Support\Facades\Log;
 
 class TelegramController extends Controller
 {
@@ -12,10 +13,20 @@ class TelegramController extends Controller
     {
         $bot = new Api(env('TELEGRAM_BOT_TOKEN'));
         $update = $bot->getWebhookUpdate();
-
+        
         $message = $update->getMessage();
+
+        $replyToId = $message->getReplyToMessage()?->getMessageId();
+        $bot->sendMessage([
+        'chat_id' => $message->getChat()->getId(),
+        'text' => "Recebido! Texto: {$message->getText()}\nReplyTo ID: {$replyToId}",
+        ]);
+
+        // Ou retornar como resposta JSON
+        //return response()->json($update->toArray());
+
         if (!$message || !$message->getText()) {
-            return response('Nenhuma menssagem enviada.', 200);
+            return response('Nenhuma mensagem enviada.', 200);
         }
 
         if ($message->getReplyToMessage()) {
@@ -24,7 +35,7 @@ class TelegramController extends Controller
             
             if(str_contains($texto, 'recebido') || str_contains($texto, 'ok')) {
             
-                $$atendimento = Atendimento::where('telegram_message_id', $repliedMessageId)->first();
+                $atendimento = Atendimento::where('telegram_message_id', $repliedMessageId)->first();
 
                 if (!$atendimento) {
                     return response('Atendimento não encontrado para esta resposta.', 200);
@@ -49,16 +60,6 @@ class TelegramController extends Controller
 
         return response('Webhook recebido.', 200);
     }
-}
-
-
-
-
-
-
-
-
-
 
 
 }

@@ -10,7 +10,7 @@
                 <label for="atendimento" class="block mb-6 text-2xl font-semibold text-gray-900">
                     Iniciar atendimento emergencial
                 </label>
-                <form method="POST" action="/iniciar">
+                <form method="POST" action="{{ route('telegram.atendimento.iniciar') }}">
                     @csrf
                     <input type="hidden" name="atendimento" value="1">
                     <button type="submit" class="text-white bg-blue-600/0 hover:bg-blue-600focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-full text-xl px-5 py-10 shadow-lg transform transition hover:scale-105">

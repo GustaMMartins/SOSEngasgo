@@ -6,6 +6,9 @@ use App\Http\Controllers\TelegramController;
 use Illuminate\Support\Facades\Route;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
+// Apagar depois
+use Illuminate\Support\Facades\Artisan;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -14,6 +17,9 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+// Webhook (Telegram chama automaticamente)    
+Route::post('telegram/webhook', [TelegramController::class, 'webhook']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -39,16 +45,24 @@ Route::middleware('auth')->group(function () {
         return response()->json($me);
     })->name('telegram.get.me');
 
-
-    // Webhook (Telegram chama automaticamente)
-    Route::post('/telegram/webhook', [TelegramController::class, 'webhook']);
-
     // Atendimento
     Route::get('/atendimento', [TelegramBotController::class, 'index'])->name('telegram.atendimento');
-    Route::post('/iniciar', [TelegramBotController::class, 'iniciarAtendimento'])->name('atendimento.iniciar'); //clique no botão iniciar atendimento
+    Route::post('/atendimento', [TelegramBotController::class, 'iniciarAtendimento'])->name('telegram.atendimento.iniciar'); // clique no botão "iniciar atendimento"
+
+    // Tela aguardando
     Route::get('/aguardando', [TelegramBotController::class, 'aguardandoAtendimento'])->name('telegram.aguardando');
-    Route::get('/verificar-confirmacao', [TelegramBotController::class, 'verificarConfirmacao'])->name('telegram.confirmado');
-    Route::get('/confirmar-atendimento', [TelegramBotController::class, 'confirmarAtendimento'])->name('telegram.confirmar.atendimento');
+    // Verifica se o atendimento foi confirmado pelo webhook e atualiza o status
+    Route::get('verificar/{id}', [TelegramBotController::class, 'verificarConfirmacao'])->name('telegram.verificar');
+    
+    // Confirmar atendimento
+    Route::get('/confirmacao', [TelegramBotController::class, 'confirmarAtendimento'])->name('telegram.confirmado');
+
+    // Temporário
+    Route::get('/limpar-cache', function () {
+        Artisan::call('optimize:clear');
+        return 'Cache limpo!';
+    });
+
 
 });
 
