@@ -37,21 +37,23 @@ RUN npm install && npm run build
 # Gerar APP_KEY
 # RUN php artisan key:generate
 
-# Gerar cache de configuração e rodar migrations
-RUN php artisan config:cache
-RUN php artisan migrate --force || true
+# Gera cache de configuração e realiza migrations
+RUN php artisan config:cache \
+ && php artisan route:cache \
+ && php artisan view:cache \
+ && php artisan migrate --force || true
 
 # Copia config do Nginx
 COPY default.conf /etc/nginx/conf.d/default.conf
 
-# Define permissões corretas
-RUN chown -R www-data:www-data storage bootstrap/cache
-
 # Copia supervisord para gerenciar Nginx + PHP-FPM
 COPY supervisord.conf /etc/supervisord.conf
+
+# Define permissões corretas
+RUN chown -R www-data:www-data storage bootstrap/cache
 
 # Expõe porta
 EXPOSE 80
 
-# Inicia supervisord para gerenciar ambos
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+# Comando final: inicia nginx + php-fpm via supervisord
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
