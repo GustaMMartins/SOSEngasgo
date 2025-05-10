@@ -42,8 +42,7 @@ RUN php artisan migrate --force
 # Ajustar permissões
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Expor a porta que será usada no Render
-EXPOSE 10000
+# Expor porta para o Nginx
+EXPOSE 9000
 
-# ✅ Corrigido: usar o servidor PHP embutido com redirecionamento correto (webhook etc)
-CMD php -S 0.0.0.0:10000 -t public
+CMD ["php-fpm"]
