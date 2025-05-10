@@ -35,12 +35,15 @@ RUN npm install && npm run build
 # Gerar APP_KEY
 # RUN php artisan key:generate
 
-# Rodar migrations
+# Gerar cache de configuração e rodar migrations
+RUN php artisan config:cache
 RUN php artisan migrate --force
 
 # Ajustar permissões
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Expor a porta e iniciar Laravel
+# Expor a porta que será usada no Render
 EXPOSE 10000
+
+# ✅ Corrigido: usar o servidor PHP embutido com redirecionamento correto (webhook etc)
 CMD php -S 0.0.0.0:10000 -t public
