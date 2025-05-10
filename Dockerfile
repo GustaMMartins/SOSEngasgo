@@ -14,7 +14,8 @@ RUN apt-get update && apt-get install -y \
     npm \
     nodejs \
     sqlite3 \
-    libsqlite3-dev
+    libsqlite3-dev \
+    supervisor 
 
 # Instalar extensões PHP
 RUN docker-php-ext-install pdo pdo_mysql pdo_sqlite mbstring exif pcntl bcmath gd zip
@@ -36,13 +37,21 @@ RUN npm install && npm run build
 # RUN php artisan key:generate
 
 # Gerar cache de configuração e rodar migrations
-RUN php artisan config:cache
-RUN php artisan migrate --force
+# RUN php artisan config:cache
+# RUN php artisan migrate --force
 
 # Ajustar permissões
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Expor porta para o Nginx
-EXPOSE 9000
+# Copia configuração do Nginx
+COPY nginx.conf /etc/nginx/nginx.conf
 
-CMD ["php-fpm"]
+# Copia script de inicialização
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+# Expõe porta 80 (Render exige)
+EXPOSE 80
+
+# Comando de entrada
+CMD ["/start.sh"]
