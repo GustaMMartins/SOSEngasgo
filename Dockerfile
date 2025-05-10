@@ -2,8 +2,6 @@ FROM php:8.2-fpm
 
 # Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
-    nginx \
-    build-essential \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
@@ -15,8 +13,7 @@ RUN apt-get update && apt-get install -y \
     npm \
     nodejs \
     sqlite3 \
-    libsqlite3-dev \
-    supervisor 
+    libsqlite3-dev
 
 # Instalar extensões PHP
 RUN docker-php-ext-install pdo pdo_mysql pdo_sqlite mbstring exif pcntl bcmath gd zip
@@ -32,7 +29,9 @@ COPY . .
 
 # Instalar dependências do Laravel
 RUN composer install --no-dev --optimize-autoloader
-RUN npm install && npm run build
+
+# Compilar assets (se tiver)
+RUN [ -f package.json ] && npm install && npm run build || echo "No frontend assets to build"
 
 # Gerar APP_KEY
 # RUN php artisan key:generate
@@ -43,17 +42,11 @@ RUN php artisan config:cache \
  && php artisan view:cache \
  && php artisan migrate --force || true
 
-# Copia config do Nginx
-COPY default.conf /etc/nginx/conf.d/default.conf
-
-# Copia supervisord para gerenciar Nginx + PHP-FPM
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
 # Define permissões corretas
 RUN chown -R www-data:www-data storage bootstrap/cache
 
 # Expõe porta
-EXPOSE 80
+EXPOSE 10000
 
-# Comando final: inicia nginx + php-fpm via supervisord
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Start do Laravel
+CMD php artisan serve --host=0.0.0.0 --port=10000
