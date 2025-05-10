@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/confirmacao', [TelegramBotController::class, 'confirmarAtendimento'])->name('telegram.confirmado');
 
     // Webhook (Telegram chama automaticamente)
-    Route::post('/telegram/webhook', [TelegramController::class, 'webhook']); //sem view
+    //Route::post('telegram/webhook', [TelegramController::class, 'webhook']);
 
     // Temporário
     Route::get('/limpar-cache', function () {

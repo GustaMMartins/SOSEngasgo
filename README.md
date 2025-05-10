@@ -65,6 +65,13 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
+## Webhook
+
+- php artisan make:command SetTelegramWebhook
+- .env: APP_URL deve conter a URL atualizada
+- php artisan telegram:webhook
+- retirar csrf do webhook?
+
 ## Instalação
 `bash`
 - git clone https://github.com/seu-usuario/SOSEngasgo.git
