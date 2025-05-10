@@ -47,7 +47,7 @@ RUN php artisan config:cache \
 COPY default.conf /etc/nginx/conf.d/default.conf
 
 # Copia supervisord para gerenciar Nginx + PHP-FPM
-COPY supervisord.conf /etc/supervisord.conf
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Define permissões corretas
 RUN chown -R www-data:www-data storage bootstrap/cache
