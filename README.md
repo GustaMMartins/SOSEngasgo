@@ -70,11 +70,12 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 - php artisan make:command SetTelegramWebhook
 - .env: APP_URL deve conter a URL atualizada
 - php artisan telegram:webhook
-- retirar csrf do webhook?
+- editado csrf com execção para webhook: bootstrap\cache\app.php
+- Obs.: Webhook funcionou com rota fora da middleware(auth) somente
 
 ## Instalação
 `bash`
-- git clone https://github.com/seu-usuario/SOSEngasgo.git
+- git clone [SOSEngasgo](https://github.com/seu-usuario/SOSEngasgo.git).
 - cd SOSEngasgo
 - composer install
 - npm install
@@ -95,3 +96,11 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 ## Sincronizar repositório
 - git pull origin develop `ou main`
+
+## Testes no Render
+- [sos-engasgo](https://sos-engasgo.onrender.com/).
+
+## Diversos
+- AppServiceProvider.php: force HTTPS e addcommands
+-Controller: ->coomandsHandler(true); 
+- App\Telegram\Commands: inserido comandos para uso no Telegram e atualizado em telegram.php

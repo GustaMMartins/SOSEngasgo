@@ -11,9 +11,11 @@ class TelegramController extends Controller
 {
     public function webhook(Request $request)
     {
+
         $bot = new Api(env('TELEGRAM_BOT_TOKEN'));
         $update = $bot->getWebhookUpdate();
-        
+        $bot->commandsHandler(true);
+
         $message = $update->getMessage();
 
         $replyToId = $message->getReplyToMessage()?->getMessageId();
