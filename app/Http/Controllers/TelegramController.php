@@ -14,26 +14,37 @@ class TelegramController extends Controller
 
         $bot = new Api(env('TELEGRAM_BOT_TOKEN'));
         $update = $bot->getWebhookUpdate();
+
+        // processar o comando
         $bot->commandsHandler(true);
 
         $message = $update->getMessage();
+        if(!$message || !$message->getText()) {
+            return response('Nenhuma mensagem enviada.', 200);
+        }
+
+        $texto = $message->getText();
+
+        if(str_starts_with($texto, '/')) {
+            return response('Comando recebido.', 200);
+        }
 
         $replyToId = $message->getReplyToMessage()?->getMessageId();
         $bot->sendMessage([
         'chat_id' => $message->getChat()->getId(),
-        'text' => "Recebido! Texto: {$message->getText()}\nReplyTo ID: {$replyToId}",
+        'text' => "Recebido! Texto: {$texto}\nReplyTo ID: {$replyToId}",
         ]);
 
         // Ou retornar como resposta JSON
         //return response()->json($update->toArray());
 
-        if (!$message || !$message->getText()) {
-            return response('Nenhuma mensagem enviada.', 200);
-        }
-
+        /* Verifica se a mensagem é uma resposta a outra mensagem
+           e se o texto contém "recebido" ou "ok"
+           Se sim, atualiza o status do atendimento
+           e envia uma mensagem de confirmação no grupo. */
         if ($message->getReplyToMessage()) {
             $repliedMessageId = $message->getReplyToMessage()->getMessageId();
-            $texto = strtolower($message->getText());
+            $texto = strtolower($texto);
             
             if(str_contains($texto, 'recebido') || str_contains($texto, 'ok')) {
             
