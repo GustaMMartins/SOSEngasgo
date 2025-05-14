@@ -17,16 +17,20 @@ class TelegramBotController extends Controller
     }
 
     public function iniciarAtendimento()
-    {
+    {   
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('telegram.atendimento')->with('error', 'Usuário não autenticado.');
+        }
         $atendimento = Atendimento::create([
             'status' => 'aguardando',
-            'user_id' => Auth::id(), // ID do usuário autenticado
+            'user_id' => $user->id, // ID do usuário autenticado
         ]);
         
         // Enviar mensagem para o grupo do Telegram
         $response = Telegram::sendMessage([
             'chat_id' => env('CHAT_ID_TELEGRAM_GROUP'), // ID do chat,
-            'text' => 'Olá Equipe! Atendimento solicitado pelo ' .$atendimento->user_id .' com ID: ' . $atendimento->id . ' - responder ao bot com "ok" ou "recebido" para confirmar. Ass.: Laravel.',
+            'text' => 'Olá Equipe! Atendimento solicitado pelo ' .$atendimento->user_id .' - ' .$user->name .' com ID: ' . $atendimento->id . ' - responder ao bot com "ok" ou "recebido" para confirmar. Ass.: Laravel.',
         ]);
 
         //message_id do atendimento para que o "ok" possa ser direcionado ao chamado de emergência corretamente
