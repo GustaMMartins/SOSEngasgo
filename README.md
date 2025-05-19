@@ -101,6 +101,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 - [sos-engasgo](https://sos-engasgo.onrender.com/).
 
 ## Diversos
-- AppServiceProvider.php: force HTTPS e addcommands
+- App\Providers\AppServiceProvider.php: force HTTPS
 -Controller: ->coomandsHandler(true); 
-- App\Telegram\Commands: inserido comandos para uso no Telegram e atualizado em telegram.php
+- App\Telegram\Commands: inserido comandos para uso no Telegram e atualizado em config\telegram.php ou App\Providers\AppServiceProvider.php com  e addcommands;
+- helpcommand \help já vem com API;

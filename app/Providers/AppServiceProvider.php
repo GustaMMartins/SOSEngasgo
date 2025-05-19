@@ -29,14 +29,14 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
-        Telegram::addCommands([
-            Commands\StartCommand::class,
+        //Telegram::addCommands([
+        //    Commands\StartCommand::class,
             // usar para listar chamados
             //Commands\HelpCommand::class,
             //Commands\AtendimentoCommand::class,
             //Commands\AguardandoCommand::class,
             //Commands\ConfirmarAtendimentoCommand::class,
-        ]);
+        //]); //Opcional, caso não esteja em telegram.php
 
     }
 
