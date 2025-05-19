@@ -1,5 +1,6 @@
 <?php
 
+use App\Telegram\Commands\StartCommand;
 use Telegram\Bot\Commands\HelpCommand;
 
 
@@ -132,7 +133,6 @@ return [
     */
     'commands' => [
         HelpCommand::class,
-        App\Telegram\Commands\StartCommand::class,
     ],
 
     /*

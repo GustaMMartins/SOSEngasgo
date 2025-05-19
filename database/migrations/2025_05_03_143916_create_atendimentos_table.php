@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('atendimentos', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->uuid('id')->primary();
+            $table->foreignIdFor(\App\Models\User::class)->constrained();
             $table->enum('status', ['aguardando', 'confirmado'])->default('aguardando');
             $table->timestamp('dataConfirmado')->nullable();
             $table->string('localizacao')->nullable();

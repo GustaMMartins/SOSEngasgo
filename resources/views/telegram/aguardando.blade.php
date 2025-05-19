@@ -16,7 +16,7 @@
 
                     // Verifica a confirmação a cada 3 segundos
                     const interval = setInterval(() => {
-                        fetch('{{ route('telegram.verificar', $atendimento->id) }}', {
+                        fetch('{{ route('telegram.verificar', ['id' => $atendimento->id]) }}', {
                             method: 'GET',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -38,7 +38,7 @@
                             console.log('Dados recebidos:', data);
                             if (data.confirmado) {
                                 clearInterval(interval); // Parar o intervalo ao receber a confirmação
-                                window.location.href = '/confirmacao'; // Redireciona para a página de confirmação
+                                window.location.href = '{{ route('telegram.confirmado', ['id' => $atendimento->id]) }}'; // Redireciona para a página de confirmação
                             }
                         })
                         .catch(error => {
