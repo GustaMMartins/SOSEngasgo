@@ -2,11 +2,9 @@
 
 namespace App\Providers;
 
-use App\Telegram\Commands;
 use Illuminate\Routing\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
-use Telegram\Bot\Laravel\Facades\Telegram;
 
 class AppServiceProvider extends ServiceProvider
 {
