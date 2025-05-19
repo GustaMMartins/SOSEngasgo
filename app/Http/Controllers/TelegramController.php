@@ -14,10 +14,6 @@ class TelegramController extends Controller
 
         $bot = new Api(env('TELEGRAM_BOT_TOKEN'));
 
-        //Registra os comandos personalizados
-        $bot->addCommand([
-            \App\Telegram\Commands\StartCommand::class,
-        ]);
         // processar o comando
         $bot->commandsHandler(true);
 
