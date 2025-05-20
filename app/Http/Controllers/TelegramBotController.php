@@ -10,6 +10,13 @@ use App\Models\Atendimento;
 class TelegramBotController extends Controller
 
 {
+    public function dashboard()
+    {
+        $user = Auth::user();
+        //é possível fazer um if e verificar se o usuário é Administrador e pode ver todas os atendimentos
+        $atendimentos = $user->atendimentos()->orderBy('created_at', 'desc')->get(); //lista de atendientos do usuário logado
+        return view('dashboard', compact('atendimentos')); //compact é um helper do PHP que transforma variáveis em array associativo
+    }
 
     public function index()
     {
@@ -52,6 +59,11 @@ class TelegramBotController extends Controller
             return redirect()->route('telegram.atendimento')->with('error', 'Você não tem permissão para acessar esta id!');
         }
 
+        // Verifica se o atendimento foi confirmado
+        if ($atendimento->status === 'confirmado') {
+            return redirect()->route('telegram.confirmado', ['id' => $atendimento->id]);
+        }
+
         // compact envia a variável $atendimento para a view aguardando.blade.php
         return view('telegram.aguardando', compact('atendimento'));
     }
@@ -66,6 +78,11 @@ class TelegramBotController extends Controller
 
         if(!$this->validarAcesso($atendimento)){
             return redirect()->route('telegram.atendimento')->with('error', 'Você não tem permissão para acessar esta id!');
+        }
+
+        // Verifica se o atendimento foi confirmado
+        if ($atendimento->status === 'confirmado') {
+            return redirect()->route('telegram.confirmado', ['id' => $atendimento->id]);
         }
 
         return response()->json([
@@ -86,7 +103,7 @@ class TelegramBotController extends Controller
         if(!$this->validarAcesso($atendimento)){
             return redirect()->route('telegram.atendimento')->with('error', 'Você não tem permissão para acessar esta id!');
         }
-
+        $atendimento->dataConfirmado = now();
         $atendimento->status = 'confirmado';
         $atendimento->save();
 

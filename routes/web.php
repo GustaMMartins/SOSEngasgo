@@ -14,9 +14,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+//Route::get('/dashboard', function () {
+//    return view('dashboard');
+//})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [TelegramBotController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
 
 // Webhook (Telegram chama automaticamente)    
 Route::post('telegram/webhook', [TelegramController::class, 'webhook']);
