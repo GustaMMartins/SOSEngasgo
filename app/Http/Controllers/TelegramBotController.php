@@ -93,6 +93,9 @@ class TelegramBotController extends Controller
 
     public function confirmarAtendimento($id)
     {
+        if (!request()->ajax() && !request()->isMethod('post')) {
+            abort(403, 'Acesso não autorizado.');
+        }
         //dd($id);
         $atendimento = Atendimento::findOrFail($id);
 

@@ -7,6 +7,9 @@
     <div class="py-8 bg-blue-900 flex items-center justify-center mt-6 sm:mt-0">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-blue-500/30 backdrop-blur-md border border-white/20 rounded-lg shadow-lg p-8 text-center">
+                <form id="confirmarForm" action="{{ route('telegram.confirmado', ['id' => $atendimento->id]) }}" method="POST" style="display: none;">
+                @csrf
+                </form>
                 <h2>Aguardando confirmação da equipe...</h2>
                 <p>ID do atendimento: {{ $atendimento->id }}</p>
                 <p>Status: {{ $atendimento->status }}</p>
@@ -38,7 +41,8 @@
                             console.log('Dados recebidos:', data);
                             if (data.confirmado) {
                                 clearInterval(interval); // Parar o intervalo ao receber a confirmação
-                                window.location.href = '{{ route('telegram.confirmado', ['id' => $atendimento->id]) }}'; // Redireciona para a página de confirmação
+                                document.getElementById('confirmarForm').submit();
+                                //window.location.href = '{{ route('telegram.confirmado', ['id' => $atendimento->id]) }}'; // Redireciona para a página de confirmação
                             }
                         })
                         .catch(error => {

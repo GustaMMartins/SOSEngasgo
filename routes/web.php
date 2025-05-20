@@ -57,7 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/verificar/{id}', [TelegramBotController::class, 'verificarConfirmacao'])->name('telegram.verificar');
     
     // Confirmar atendimento
-    Route::get('/confirmacao/{id}', [TelegramBotController::class, 'confirmarAtendimento'])->name('telegram.confirmado');
+    Route::post('/confirmacao/{id}', [TelegramBotController::class, 'confirmarAtendimento'])->name('telegram.confirmado');
 
     // Temporário
     Route::get('/limpar-cache', function () {
