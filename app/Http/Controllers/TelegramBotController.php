@@ -77,12 +77,7 @@ class TelegramBotController extends Controller
         }
 
         if(!$this->validarAcesso($atendimento)){
-            return redirect()->route('telegram.atendimento')->with('error', 'Você não tem permissão para acessar esta id!');
-        }
-
-        // Verifica se o atendimento foi confirmado
-        if ($atendimento->status === 'confirmado') {
-            return redirect()->route('telegram.confirmado', ['id' => $atendimento->id]);
+            return response()->json(['confirmado' => false, 'error' => 'Você não tem permissão para acessar esta id!'], 403);
         }
 
         return response()->json([

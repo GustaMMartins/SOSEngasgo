@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Atendimento;
 
 class AtendimentoController extends Controller
 {
@@ -57,8 +59,24 @@ class AtendimentoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Atendimento $atendimento)
     {
-        //
+        if(!$this->validarAcesso($atendimento)){
+            return redirect()->route('dashboard')->with('error', 'Você não tem permissão para excluir esta tarefa!');
+        }
+
+        $atendimento->delete();
+        return redirect()->route('dashboar')->with('success', 'Tarefa excluída com sucesso!');
+    }
+
+    private function validarAcesso(Atendimento $atendimento):bool
+    {
+        $user = Auth::user();
+        if($atendimento->user_id != $user->id){
+            return false;
+        }
+
+        return true;
+
     }
 }

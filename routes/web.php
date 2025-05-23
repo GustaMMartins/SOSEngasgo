@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AtendimentoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\TelegramController;
@@ -58,6 +59,9 @@ Route::middleware('auth')->group(function () {
     
     // Confirmar atendimento
     Route::get('/confirmacao/{id}', [TelegramBotController::class, 'confirmarAtendimento'])->name('telegram.confirmado');
+
+    // BD atendimentos
+    Route::delete('/dashboard/{atendimento}', [AtendimentoController::class, 'destroy'])->name('destroy');
 
     // Temporário
     Route::get('/limpar-cache', function () {
