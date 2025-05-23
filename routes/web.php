@@ -18,7 +18,9 @@ Route::get('/', function () {
 //Route::get('/dashboard', function () {
 //    return view('dashboard');
 //})->middleware(['auth', 'verified'])->name('dashboard');
+// Lista Atendimentos
 Route::get('/dashboard', [TelegramBotController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::delete('/dashboard/{atendimento}', [AtendimentoController::class, 'destroy'])->middleware(['auth', 'verified'])->name('destroy');
 
 // Webhook (Telegram chama automaticamente)    
 Route::post('telegram/webhook', [TelegramController::class, 'webhook']);
@@ -59,9 +61,6 @@ Route::middleware('auth')->group(function () {
     
     // Confirmar atendimento
     Route::get('/confirmacao/{id}', [TelegramBotController::class, 'confirmarAtendimento'])->name('telegram.confirmado');
-
-    // BD atendimentos
-    Route::delete('/dashboard/{atendimento}', [AtendimentoController::class, 'destroy'])->name('destroy');
 
     // Temporário
     Route::get('/limpar-cache', function () {
