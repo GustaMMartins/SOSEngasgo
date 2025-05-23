@@ -38,17 +38,6 @@ RUN npm install && npm run build
 # Rodar migrations
 RUN php artisan migrate --force
 
-# Limpar e atualizar rotas de cache
-RUN php artisan route:clear
-RUN php artisan config:clear
-RUN php artisan view:clear
-RUN php artisan cache:clear
-RUN php artisan optimize:clear
-RUN php artisan optimize
-RUN php artisan config:cache
-RUN php artisan route:cache
-RUN php artisan view:cache
-
 # Ajustar permissões
 RUN chown -R www-data:www-data storage bootstrap/cache
 
