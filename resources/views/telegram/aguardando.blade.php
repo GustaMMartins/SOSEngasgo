@@ -9,6 +9,7 @@
             <div class="bg-blue-500/30 backdrop-blur-md border border-white/20 rounded-lg shadow-lg p-8 text-center">
                 <form id="confirmarForm" action="{{ route('telegram.confirmado', ['id' => $atendimento->id]) }}" method="POST" style="display: none;">
                 @csrf
+                @method('PATCH')
                 </form>
                 <h2>Aguardando confirmação da equipe...</h2>
                 <p>ID do atendimento: {{ $atendimento->id }}</p>
