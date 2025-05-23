@@ -66,7 +66,7 @@ class AtendimentoController extends Controller
         }
 
         $atendimento->delete();
-        return redirect()->route('dashboar')->with('success', 'Tarefa excluída com sucesso!');
+        return redirect()->route('dashboard')->with('success', 'Tarefa excluída com sucesso!');
     }
 
     private function validarAcesso(Atendimento $atendimento):bool
