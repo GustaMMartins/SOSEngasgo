@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AtendimentoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\TelegramController;
@@ -14,9 +15,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+//Route::get('/dashboard', function () {
+//    return view('dashboard');
+//})->middleware(['auth', 'verified'])->name('dashboard');
+// Lista Atendimentos
+Route::get('/dashboard', [TelegramBotController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::delete('/dashboard/{atendimento}', [AtendimentoController::class, 'destroy'])->middleware(['auth', 'verified'])->name('destroy');
 
 // Webhook (Telegram chama automaticamente)    
 Route::post('telegram/webhook', [TelegramController::class, 'webhook']);
