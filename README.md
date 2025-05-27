@@ -100,6 +100,9 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 ## Testes no Render
 - [sos-engasgo](https://sos-engasgo.onrender.com/).
 
+## Trello
+- [Trello](https://trello.com/b/Xiy0EM2K).
+
 ## Diversos
 - App\Providers\AppServiceProvider.php: force HTTPS
 - helpcommand \help já vem com API;
