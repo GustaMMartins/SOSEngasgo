@@ -80,9 +80,10 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 - composer install
 - npm install
 - copiar .env (compartilhado no grupo da equipe) para a pasta do projeto
-- rpm run dev `ou npm run dev build (desenvolvimento x deploy)`
+- npm run dev `ou npm run dev build (desenvolvimento x deploy)`
 - php artisan serve
 - Obs.: necessário criar o database (database.sqlite) ou copiar o enviado no grupo da equipe para ./database/.
+- php artisan migrate (para estrutura do BD)
 
 ## Criar branch de trabalho
 - git checkout -b feature/nome-da-funcionalidade
