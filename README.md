@@ -65,6 +65,29 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
+## Etapas propostas
+
+- Resumo do que você precisa configurar
+	•	Criar um bot no BotFather.
+	•	Configurar o webhook para receber eventos do bot.
+	•	Colocar seu PHP em um servidor com HTTPS (requisito do Telegram).
+	•	Obter o chat_id do terceiro (pode ser grupo, canal, etc.).
+	•	Lidar com os fluxos de segurança (consentimento de localização, confirmação, etc.).
+
+## Passos para criar o bot
+
+	1.	No Telegram, busque por: @BotFather
+	2.	Envie: /start
+	3.	Depois: /newbot
+	4.	Dê um nome e um @username único para o bot.
+	5.	O BotFather vai te dar um token, algo como:
+123456789:ABCDefghIJKlmnoPQrstuvXYZ1234567890
+
+## Instalar a biblioteca Telegram no Laravel
+
+- No terminal do seu projeto Laravel:
+composer require irazasyed/telegram-bot-sdk
+
 ## Webhook
 
 - php artisan make:command SetTelegramWebhook
