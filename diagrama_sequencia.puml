@@ -1,0 +1,77 @@
+@startuml diagrama_sequencia
+skinparam handwritten true
+skinparam defaultFontName "Arial"
+skinparam defaultFontSize 14
+skinparam sequence {
+    ArrowColor #0000FF
+    ActorBorderColor #0000FF
+    ParticipantBorderColor #0000FF
+    LifeLineBorderColor #0000FF
+    LifeLineBackgroundColor #FFFFFF
+}
+
+actor Usuário as User
+participant "Aplicativo SOS Engasgo" as App
+participant ":ControleEmergencia" as EmergencyControl
+participant ":Emergencia" as EmergencyObject
+participant ":Dependente" as DependentObject
+participant "Serviço de Localização" as LocationService
+participant "Serviço de Emergência\n(Ex: Bombeiros)" as EmergencyService
+participant "Serviço de Mídia\n(Vídeos/Áudio)" as MediaService
+
+autonumber
+
+User -> App : acionarEmergencia()
+activate App
+App -> EmergencyControl : iniciarAtendimento()
+activate EmergencyControl
+
+EmergencyControl -> App : solicitarTipoEmergencia()
+App -> User : exibirPerguntaTipoEngasgo(líquido/sólido, para quem?)
+User -> App : confirmarTipoEngasgo(tipoEngasgo, idDependente)
+App -> EmergencyControl : confirmarTipoEmergencia(tipoEngasgo, idDependente)
+
+EmergencyControl -> App : solicitarLocalizacao()
+App -> User : exibirPerguntaLocalizacao(atual/cadastrada?)
+User -> App : confirmarLocalizacao(opção)
+App -> EmergencyControl : obterLocalizacao(opção)
+
+EmergencyControl -> LocationService : getCoordenadas(opção)
+activate LocationService
+LocationService --> EmergencyControl : coordenadas
+deactivate LocationService
+
+EmergencyControl -> EmergencyObject : criarEmergencia(idDependente, tipoEngasgo, coordenadas)
+activate EmergencyObject
+EmergencyObject --> EmergencyControl : emergênciaCriada
+deactivate EmergencyObject
+
+EmergencyControl -> EmergencyService : enviarChamadaEmergencia(\n  dadosUsuario, dadosDependente, idEmergencia, coordenadas)
+activate EmergencyService
+EmergencyService --> EmergencyControl : confirmaçãoRecebimento
+deactivate EmergencyService
+
+EmergencyControl -> App : iniciarOrientacao()
+App -> MediaService : apresentarVideo(idDependente, tipoEngasgo)
+activate MediaService
+MediaService --> App : videoIniciado
+deactivate MediaService
+App -> User : exibirVideoOrientacao()
+
+App -> MediaService : iniciarReconhecimentoVoz()
+activate MediaService
+MediaService --> App : prontoParaVoz
+deactivate MediaService
+App -> User : solicitarInteracaoVoz()
+User -> App : falar(comando)
+App -> MediaService : processarVoz(comando)
+activate MediaService
+MediaService --> App : feedbackVoz
+deactivate MediaService
+App -> User : exibirFeedbackVoz()
+
+EmergencyControl -> EmergencyObject : atualizarStatus(EmAtendimento)
+deactivate EmergencyControl
+deactivate App
+
+@enduml

@@ -1,0 +1,163 @@
+@startuml diagrama_classes
+' Diagrama de Classes para o Sistema SOS Engasgo
+skinparam handwritten true
+skinparam defaultFontName "Arial"
+skinparam defaultFontSize 14
+
+skinparam classAttributeIconSize 0
+skinparam classAttributeAlignment left
+' Classes Principais (Baseadas nas Entidades do BD)
+
+class Usuario {
+  - idUsuario: int <<PK>>
+  - cpf: String <<Unique>>
+  - rg: String
+  - nome: String
+  - idade: int
+  - peso: Decimal
+  - email: String
+  - telefone: String
+  - endereco: String
+  - latitude: Decimal
+  - longitude: Decimal
+  - assinante: Boolean ' Reflete tipoUsuario (Gratuito/Assinante)
+  - dataCadastro: Date
+  - senhaHash: String
+  --
+  + criarCadastro(): Boolean
+  + efetuarLogin(): Boolean
+  + editarPerfil(): Boolean
+  + sairDaConta(): void
+  + simularAtendimento(): void
+  + interagirPorVoz(): void
+  + apresentarVideosOrientacao(): void
+  + verInformacoesSobreTreinamentos(): void
+}
+
+class Assinatura {
+  - idAssinatura: int <<PK>>
+  - tipoPlano: String ' (mensal, anual)
+  - dataInicio: Date
+  - dataFim: Date
+  - status: String ' (ativa, cancelada, expirada)
+  - valor: Decimal
+  --
+  + assinarServico(): Boolean
+  + cancelarServico(): Boolean
+}
+
+class Dependente {
+  - idDependente: int <<PK>>
+  - cpf: String
+  - rg: String
+  - nome: String
+  - idade: int
+  - peso: Decimal
+  - email: String
+  - telefone: String
+  - endereco: String
+  - latitude: Decimal
+  - longitude: Decimal
+  - tipoRelacao: String ' (filho, mãe, avô)
+  - informacoesMedicas: String ' Inclui alergias, histórico, pcd
+  - telefoneEmergencia: String
+  - dataCadastro: Date
+  --
+  + incluirDependente(): Boolean
+  + editarDependente(): Boolean
+  + excluirDependente(): Boolean
+}
+
+class Emergencia {
+  - idEmergencia: int <<PK>>
+  - dataHora: DateTime
+  - localizacaoGps: String ' Pode ser textual ou código
+  - status: String ' (pendente, em atendimento, finalizada)
+  - observacoes: String
+  --
+  + acionarEmergencia(): Boolean
+  + confirmarTipoEmergencia(): void
+  + atualizarReceberLocalizacao(): String
+  + enviarDadosCadastrados(): Boolean
+}
+
+class InstrucaoTempoReal {
+  - idInstrucao: int <<PK>>
+  - etapa: int
+  - descricao: String ' Texto ou link para áudio/vídeo
+  - tempoSugerido: int ' Em segundos
+  --
+  + exibirInstrucao(): void
+}
+
+class VideoEducativo {
+  - idVideo: int <<PK>>
+  - titulo: String
+  - descricao: String
+  - linkVideo: String
+  - categoria: String ' (adulto, criança, bebê)
+  - exclusivoAssinante: Boolean
+  --
+  + exibirConteudo(): void
+}
+
+class HistoricoVideo <<Associativa>> {
+  - idHistorico: int <<PK>>
+  - dataHora: DateTime
+  --
+  ' Não possui métodos de alto nível de negócio, gerencia o registro
+}
+
+class LocalizacaoTempoReal {
+  - idLocalizacao: int <<PK>>
+  - dataHora: DateTime
+  - latitude: Decimal
+  - longitude: Decimal
+  - precisaoGps: Decimal <<Nullable>>
+  - velocidade: Decimal <<Nullable>>
+  --
+  ' Não possui métodos de alto nível de negócio, atua como registro de dados
+}
+
+' Relacionamentos (Baseados nas Chaves Estrangeiras e Relacionamentos do BD)
+
+Usuario "1" -- "0..*" Dependente : gerencia
+Usuario "1" -- "0..*" Emergencia : aciona
+Usuario "1" -- "0..*" Assinatura : possui
+' HistoricoVideo é a tabela de junção para a relação N:N entre Usuario e VideoEducativo
+Usuario "1" -- "0..*" HistoricoVideo
+VideoEducativo "1" -- "0..*" HistoricoVideo
+
+HistoricoVideo "0..*" -- "1" Usuario
+HistoricoVideo "0..*" -- "1" VideoEducativo
+
+Emergencia "1" -- "0..*" InstrucaoTempoReal : possui
+Emergencia "1" -- "0..*" LocalizacaoTempoReal : registra
+Emergencia "0..*" -- "0..1" Dependente : envolve
+
+' Notas para clarificação
+note "Reflete a tabela 'Usuario' do BD.\nAtributo 'assinante' para tipo de usuário." as N_Usuario
+Usuario .. N_Usuario
+
+note "Reflete a tabela 'Dependente' do BD.\n'informacoesMedicas' engloba alergias, pcd, etc." as N_Dependente
+Dependente .. N_Dependente
+
+note "Reflete a tabela 'Assinatura' do BD.\nUsuário pode ter múltiplas assinaturas ao longo do tempo." as N_Assinatura
+Assinatura .. N_Assinatura
+
+note "Reflete a tabela 'Emergencia' do BD.\n'localizacaoGps' pode ser textual ou usar LocalizacaoTempoReal." as N_Emergencia
+Emergencia .. N_Emergencia
+
+note "Reflete a tabela 'InstrucaoTempoReal' do BD.\nInstruções detalhadas para cada emergência." as N_InstrucaoTempoReal
+InstrucaoTempoReal .. N_InstrucaoTempoReal
+
+note "Reflete a tabela 'VideoEducativo' do BD (antigo Treinamento).\nVídeos de orientação e treinamento." as N_VideoEducativo
+VideoEducativo .. N_VideoEducativo
+
+note "Reflete a tabela 'HistoricoVideo' do BD.\nGerencia quais vídeos o usuário assistiu." as N_HistoricoVideo
+HistoricoVideo .. N_HistoricoVideo
+
+note "Reflete a tabela 'LocalizacaoTempoReal' do BD.\nPontos de GPS coletados durante a emergência." as N_LocalizacaoTempoReal
+LocalizacaoTempoReal .. N_LocalizacaoTempoReal
+
+@enduml
