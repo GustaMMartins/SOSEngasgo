@@ -80,8 +80,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 	2.	Envie: /start
 	3.	Depois: /newbot
 	4.	Dê um nome e um @username único para o bot.
-	5.	O BotFather vai te dar um token, algo como:
-123456789:ABCDefghIJKlmnoPQrstuvXYZ1234567890
+	5.	O BotFather vai te dar um token, algo como: 123456789:ABCDefghIJKlmnoPQrstuvXYZ1234567890
 
 ## Instalar a biblioteca Telegram no Laravel
 
