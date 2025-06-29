@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Illuminate\Support\Facades\Log;
-use App\Models\Atendimento;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Atendimento;
 
 class TelegramBotController extends Controller
 {
@@ -22,8 +22,9 @@ class TelegramBotController extends Controller
 
     public function dashboard()
     {
-        
-        return view('dashboard');
+        $atendimentos = Atendimento::all();
+
+        return view('dashboard', compact('atendimentos'));
     }
 
     public function index()
