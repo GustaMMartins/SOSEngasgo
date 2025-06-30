@@ -55,11 +55,11 @@ Route::middleware('auth')->group(function () {
 
         $chat_id = env('CHAT_ID_TELEGRAM_GROUP');
         
-        $message = "🚨 Localização de emergência recebida:\nhttps://www.google.com/maps?q={$latitude},{$longitude}";
+        //$message = "🚨 Localização de emergência recebida:\nhttps://www.google.com/maps?q={$latitude},{$longitude}";
 
         $response = Telegram::sendMessage([
             'chat_id' => $chat_id,
-            'text' => $message
+            'text' => 'Coodenadas recebidas: ' . $latitude . ', ' . $longitude,
         ]);
         
         return response()->json(['success' => true, 'response' => $response]);
