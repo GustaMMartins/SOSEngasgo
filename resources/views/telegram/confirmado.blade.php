@@ -10,6 +10,7 @@
                 <h2>Atendimento confirmado pela equipe!</h2>
                 <p>ID do atendimento: {{ $atendimento->id }}</p>
                 <p>Status: {{ $atendimento->status }}</p>
+                <p>Localização: {{ $atendimento->localizacao }}</p>
                 <p>Data de usuario: {{ $atendimento->user }}</p>
             </div>
         </div>
