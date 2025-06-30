@@ -20,6 +20,48 @@
                 <p class="mt-6 text-lg text-gray-900">
                     Toque aqui para acionar ajuda e iniciar as instruções
                 </p>
+                <button onclick="enviarLocalizacao()" style="padding: 10px; background-color: red; color: white;">
+                Enviar Localização para o Telegram
+                </button>
+                <script>
+  function enviarLocalizacao() {
+    if (!navigator.geolocation) {
+      alert('Geolocalização não é suportada por este navegador.');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      const token = '7807867662:AAGvN78g-o9vMLCbf06-ZNEoYxgwic0K_q8';
+      const chat_id = '-4738693915';
+      const message = `🚨 Localização de emergência recebida:\nhttps://www.google.com/maps?q=${latitude},${longitude}`;
+
+      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          chat_id: chat_id,
+          text: message
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert('Localização enviada com sucesso!');
+      })
+      .catch(error => {
+        alert('Erro ao enviar localização.');
+        console.error('Erro:', error);
+      });
+    }, function(error) {
+      alert('Erro ao obter localização: ' + error.message);
+    });
+  }
+</script>
+
             </div>
         </div>
     </div>
