@@ -15,7 +15,7 @@
                 <label for="atendimento" class="block mb-6 text-2xl font-semibold text-gray-900">                    
                 </label>
 
-                <form method="POST" action="{{ route('telegram.atendimento.iniciar') }}"> <!-- onsubmit="return enviarLocalizacao(event)"> -->
+                <form method="POST" action="{{ route('telegram.atendimento.iniciar') }}" onsubmit="return enviarLocalizacao(event)">
                     @csrf
                     <input type="hidden" name="atendimento" value="1">
                     <input type="hidden" name="latitude" id="latitude">
