@@ -34,6 +34,10 @@ class TelegramBotController extends Controller
         $longitude = $request->input('longitude');
         $localizacao = $latitude && $longitude ? "{$latitude},{$longitude}" : null;
 
+        if (!$latitude || !$longitude) {
+            return redirect()->route('telegram.atendimento')->with('error', 'Não foi possível obter sua localização. Permita o acesso à localização no navegador.');
+        }
+
         $atendimento = Atendimento::create([
             'status' => 'aguardando',
             'user_id' => $user->id, // ID do usuário autenticado
