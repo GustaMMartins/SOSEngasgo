@@ -24,7 +24,7 @@
             </h2>
 
             <p class="mt-1 text-sm text-gray-600">
-                {{ __('') }}
+                {{ __('Após a exclusão da sua conta, todos os seus recursos e dados serão removidos de forma permanente e não poderão ser recuperados. Digite sua senha para confirmar que deseja excluir sua conta permanentemente.') }}
             </p>
 
             <div class="mt-6">
