@@ -15,6 +15,7 @@
                             <!--<h2 class="text-lg font-semibold">(ID:{{ $atendimento->id }})</h2>-->
                             <h2 class="text-lg font-semibold">(--:{{ $loop->iteration }}:--)</h2>
                             <p class="text-gray-800">{{ $atendimento->status }}</p>
+                            <p class="text-sm text-gray-500">Localização: {{ $atendimento->localizacao }}</p>
                             <p class="text-sm text-gray-500">Criado em: {{ $atendimento->created_at }}</p>
                             <p class="text-sm text-gray-500">Atualizado em: {{ $atendimento->updated_at }}</p>
                             <p class="text-sm text-gray-500">Confirmado em: {{ $atendimento->dataConfirmado }}</p>
