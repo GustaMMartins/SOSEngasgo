@@ -1,4 +1,6 @@
-function enviarLocalizacao() {
+function enviarLocalizacao(event) {
+    event.preventDefault(); // Previne o envio do formulário sem antes obter a localização
+
     if (!navigator.geolocation) {
       alert('Geolocalização não é suportada por este navegador.');
       return;
@@ -21,7 +23,9 @@ function enviarLocalizacao() {
         })
       .then(response => response.json())
       .then(data => {
-        alert('Localização enviada com sucesso!');
+        //alert('Localização enviada com sucesso!');
+        // Após enviar localização, envie o formulário
+            event.target.submit();
       })
       .catch(error => {
         alert('Erro ao enviar localização.');
@@ -30,4 +34,9 @@ function enviarLocalizacao() {
     }, function(error) {
       alert('Erro ao obter localização: ' + error.message);
     });
+
+    return false; // Impede o envio do formulário até terminar o processo de geolocalização
+
   }
+
+  window.enviarLocalizacao = enviarLocalizacao;
