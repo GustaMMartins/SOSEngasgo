@@ -18,6 +18,8 @@
                 <form method="POST" action="{{ route('telegram.atendimento.iniciar') }}" onsubmit="return enviarLocalizacao(event)">
                     @csrf
                     <input type="hidden" name="atendimento" value="1">
+                    <input type="hidden" name="latitude" id="latitude">
+                    <input type="hidden" name="longitude" id="longitude">
                     <button type="submit" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-4"
                    style="display: inline-block; padding: 0.75rem 1.25rem; border-radius: 0.375rem; text-decoration: none; text-align: center; cursor: pointer;">
                         ⚠️ Iniciar Atendimento Emergencial

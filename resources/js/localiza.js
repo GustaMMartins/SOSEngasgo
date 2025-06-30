@@ -25,6 +25,8 @@ function enviarLocalizacao(event) {
       .then(data => {
         //alert('Localização enviada com sucesso!');
         // Após enviar localização, envie o formulário
+            document.getElementById('latitude').value = latitude;
+            document.getElementById('longitude').value = longitude;
             event.target.submit();
       })
       .catch(error => {
