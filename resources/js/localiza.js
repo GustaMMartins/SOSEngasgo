@@ -1,0 +1,33 @@
+function enviarLocalizacao() {
+    if (!navigator.geolocation) {
+      alert('Geolocalização não é suportada por este navegador.');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      fetch('/send-message-localizacao', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+                latitude: latitude,
+                longitude: longitude
+            })
+        })
+      .then(response => response.json())
+      .then(data => {
+        alert('Localização enviada com sucesso!');
+      })
+      .catch(error => {
+        alert('Erro ao enviar localização.');
+        console.error('Erro:', error);
+      });
+    }, function(error) {
+      alert('Erro ao obter localização: ' + error.message);
+    });
+  }
