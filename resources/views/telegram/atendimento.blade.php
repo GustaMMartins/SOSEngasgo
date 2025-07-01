@@ -4,7 +4,7 @@
         {{ __('SOS ENGASGO') }}
     </h2>
 </x-slot>
-    @vite(['resources/js/localiza.js'])
+    @vite(['resources/js/app.js'])
     <div class="py-8 bg-red-500 flex items-ceter justify-center mt-6 sm:mt-0">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
            
