@@ -23,21 +23,34 @@ class TelegramBotController extends Controller
         return view('telegram.atendimento');
     }
 
-    public function iniciarAtendimento()
+    public function iniciarAtendimento(Request $request)
     {   
         $user = Auth::user();
         if (!$user) {
             return redirect()->route('telegram.atendimento')->with('error', 'Usuário não autenticado.');
         }
+
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
+        $localizacao = $latitude && $longitude ? "{$latitude},{$longitude}" : null;
+
+        if (!$latitude || !$longitude) {
+            return redirect()->route('telegram.atendimento')->with('error', 'Não foi possível obter sua localização. Permita o acesso à localização no navegador.');
+        }
+
         $atendimento = Atendimento::create([
             'status' => 'aguardando',
             'user_id' => $user->id, // ID do usuário autenticado
+            'localizacao' => $localizacao, // Localização enviada pelo formulário
         ]);
+
+        $localemergencia = "🚨 Localização de emergência recebida:\nhttps://www.google.com/maps?q={$latitude},{$longitude}";
+
         
         // Enviar mensagem para o grupo do Telegram
         $response = Telegram::sendMessage([
             'chat_id' => env('CHAT_ID_TELEGRAM_GROUP'), // ID do chat,
-            'text' => 'Olá Equipe! Atendimento solicitado pelo ' .$atendimento->user_id .' - ' .$user->name .' com ID: ' . $atendimento->id . ' - responder ao bot com "ok" ou "recebido" para confirmar. Ass.: Laravel.',
+            'text' => 'Olá Equipe! Atendimento solicitado pelo ' .$atendimento->user_id .' - ' .$user->name .' na localizacao: ' . $localemergencia . '. - responder ao bot com "ok" ou "recebido" para confirmar. Ass.: Laravel.',
         ]);
 
         //message_id do atendimento para que o "ok" possa ser direcionado ao chamado de emergência corretamente

@@ -44,6 +44,28 @@ Route::middleware('auth')->group(function () {
         return response()->json($response);
     })->name('telegram.send.message');
 
+    // Enviar mensagem com localização -- levar funcão para o controller posteriormente
+    Route::post('/send-message-localizacao', function (\Illuminate\Http\Request $request) {
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
+
+        if (!$latitude || !$longitude) {
+            return response()->json(['success' => false, 'error' => 'Dados de localização ausentes.'], 422);
+        }
+
+        $chat_id = env('CHAT_ID_TELEGRAM_GROUP');
+        
+        //$message = "🚨 Localização de emergência recebida:\nhttps://www.google.com/maps?q={$latitude},{$longitude}";
+
+        $response = Telegram::sendMessage([
+            'chat_id' => $chat_id,
+            'text' => 'Coodenadas recebidas: ' . $latitude . ', ' . $longitude,
+        ]);
+        
+        return response()->json(['success' => true, 'response' => $response]);
+    
+    })->name('telegram.send.message.localizacao');
+
     Route::get('get-me', function () {
         $me = Telegram::getMe();
         return response()->json($me);

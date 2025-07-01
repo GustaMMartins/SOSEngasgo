@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-white-800 leading-tight">
             {{ __('Módulo de Emergência') }}
         </h2>
     </x-slot>
@@ -10,6 +10,7 @@
                 <h2>Atendimento confirmado pela equipe!</h2>
                 <p>ID do atendimento: {{ $atendimento->id }}</p>
                 <p>Status: {{ $atendimento->status }}</p>
+                <p>Localização: {{ $atendimento->localizacao }}</p>
                 <p>Data de usuario: {{ $atendimento->user }}</p>
             </div>
         </div>
